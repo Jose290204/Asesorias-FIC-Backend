@@ -6,14 +6,14 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 //ROUTERS
-const asesoresParRouter = require('./router/administrador/asesoresParRoutes');
-const estudiantesRouter = require('./router/administrador/estudiantesRouters');
-const catalogosRouter = require('./router/administrador/catalogosRoutes');
-const asesoresDisciRouter = require('./router/administrador/asesoresDisciplinarRoutes');
-const usuariosRouter = require('./router/administrador/usuariosRoutes')
-const solicitudesRouter = require('./router/administrador/solicitudesRoutes')
-const asesoriasRouter = require('./router/administrador/asesoriasRoutes')
-const solicitarRouter = require('./router/estudiante/solicitarAsesorias')
+const asesoresParRouter = require('./routes/administrador/asesoresParRoutes');
+const estudiantesRouter = require('./routes/administrador/estudiantesRouters');
+const catalogosRouter = require('./routes/administrador/catalogosRoutes');
+const asesoresDisciRouter = require('./routes/administrador/asesoresDisciplinarRoutes');
+const usuariosRouter = require('./routes/administrador/usuariosRoutes')
+const solicitudesRouter = require('./routes/administrador/solicitudesRoutes')
+const asesoriasRouter = require('./routes/administrador/asesoriasRoutes')
+const solicitarRouter = require('./routes/estudiante/solicitarAsesorias')
 
 const app = express();
 
@@ -39,15 +39,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Rutas de los controladores
-app.use('/asesores-par', asesoresParRouter);
+
 app.use('/estudiantes', estudiantesRouter);
+
+/*
+app.use('/asesores-par', asesoresParRouter);
+
 app.use('/catalogos', catalogosRouter);
 app.use('/asesores-disciplinar', asesoresDisciRouter);
 app.use('/usuarios', usuariosRouter);
 app.use('/solicitudes', solicitudesRouter);
 app.use('/asesorias', asesoriasRouter);
 app.use('/solicitar', solicitarRouter);
-
+*/
 
 // Manejo de errores 404 (no encontrado)
 app.use(function (req, res, next) {
