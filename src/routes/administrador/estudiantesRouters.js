@@ -5,6 +5,7 @@ const estudiantesControlador = require("../../controllers/administrador/estudian
 
 
 router.get("/", estudiantesControlador.getEstudiantes);
+router.post("/", estudiantesControlador.crearEstudiante);
 
 
 module.exports = router;
