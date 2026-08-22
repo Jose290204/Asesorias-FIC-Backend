@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -18,10 +18,10 @@ model asesorias {
   id_razon             Int
   id_licenciatura      Int
   sesiones_tomadas     Int?
-  observaciones        String?
+  observaciones        String?                @db.Text
   id_estatus_asesoria  Int?
-  id_horario           Int                    @default(0)
-  estatus_asesorias    estatus_asesorias?     @relation(fields: [id_estatus_asesoria], references: [id_estatus_asesoria], onDelete: NoAction, onUpdate: NoAction)
+  id_horario           Int?                   @default(0)
+  estatus_asesorias    estatus_asesorias?     @relation(fields: [id_estatus_asesoria], references: [id_estatus_asesoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_asesorias_estatus")
   licenciaturas        licenciaturas          @relation(fields: [id_licenciatura], references: [id_licenciatura], onDelete: NoAction, onUpdate: NoAction, map: "fk_asesorias_licenciatura")
   materias             materias               @relation(fields: [id_materia], references: [id_materia], onDelete: NoAction, onUpdate: NoAction, map: "fk_asesorias_materia")
   modalidades          modalidades            @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_asesorias_modalidad")
@@ -29,14 +29,22 @@ model asesorias {
   chats                chats[]
   evidencias_asesorias evidencias_asesorias[]
   material_adicional   material_adicional[]
+
+  @@index([id_estatus_asesoria], map: "fk_asesorias_estatus")
+  @@index([id_licenciatura], map: "fk_asesorias_licenciatura")
+  @@index([id_materia], map: "fk_asesorias_materia")
+  @@index([id_modalidad], map: "fk_asesorias_modalidad")
+  @@index([id_razon], map: "fk_asesorias_razon")
 }
 
 model chats {
   id_mensaje  Int       @id @default(autoincrement())
   id_asesoria Int
-  fecha_envio DateTime? @db.Timestamp(6)
-  mensaje     String
+  fecha_envio DateTime? @db.DateTime(6)
+  mensaje     String    @db.Text
   asesorias   asesorias @relation(fields: [id_asesoria], references: [id_asesoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_chats_asesoria")
+
+  @@index([id_asesoria], map: "fk_chats_asesoria")
 }
 
 model dias_semana {
@@ -49,8 +57,11 @@ model disponibilidad_horarios {
   id_asesor             Int
   id_horario            Int
   horarios              horarios @relation(fields: [id_horario], references: [id_horario], onDelete: NoAction, onUpdate: NoAction, map: "fk_disponibilidad_horarios_horario")
+  asesor                personas @relation(fields: [id_asesor], references: [id_persona], onDelete: NoAction, onUpdate: NoAction, map: "fk_disponibilidad_horarios_asesor")
 
   @@unique([id_asesor, id_horario], map: "uq_disponibilidad_horarios")
+  @@index([id_horario], map: "fk_disponibilidad_horarios_horario")
+  @@index([id_asesor], map: "fk_disponibilidad_horarios_asesor")
 }
 
 model disponibilidad_materias {
@@ -58,8 +69,11 @@ model disponibilidad_materias {
   id_asesor             Int
   id_materia            Int
   materias              materias @relation(fields: [id_materia], references: [id_materia], onDelete: NoAction, onUpdate: NoAction, map: "fk_disponibilidad_materias_materia")
+  asesor                personas @relation(fields: [id_asesor], references: [id_persona], onDelete: NoAction, onUpdate: NoAction, map: "fk_disponibilidad_materias_asesor")
 
   @@unique([id_asesor, id_materia], map: "uq_disponibilidad_materias")
+  @@index([id_materia], map: "fk_disponibilidad_materias_materia")
+  @@index([id_asesor], map: "fk_disponibilidad_materias_asesor")
 }
 
 model estatus {
@@ -83,12 +97,15 @@ model estatus_solicitud {
 model evidencias_asesorias {
   id_evidencia   Int       @id @default(autoincrement())
   id_asesoria    Int
-  nombre_archivo String    @unique @db.VarChar(100)
-  ruta_archivo   String    @unique
+  nombre_archivo String    @db.VarChar(255)
+  drive_file_id  String    @db.VarChar(255)
+  url_archivo    String    @db.Text
   mime_type      String?   @db.VarChar(100)
-  tama_o_archivo Int?      @map("tamaño_archivo")
-  fecha_subida   DateTime? @db.Timestamp(6)
+  tamano_archivo Int?
+  fecha_subida   DateTime? @default(now()) @db.DateTime(0)
   asesorias      asesorias @relation(fields: [id_asesoria], references: [id_asesoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_evidencias_asesoria")
+
+  @@index([id_asesoria], map: "fk_evidencias_asesoria")
 }
 
 model grupos {
@@ -97,6 +114,8 @@ model grupos {
   grupo           String?       @db.VarChar(3)
   licenciaturas   licenciaturas @relation(fields: [id_licenciatura], references: [id_licenciatura], onDelete: NoAction, onUpdate: NoAction, map: "fk_grupos_licenciatura")
   personas        personas[]
+
+  @@index([id_licenciatura], map: "fk_grupos_licenciatura")
 }
 
 model horarios {
@@ -108,7 +127,7 @@ model horarios {
 
 model licenciaturas {
   id_licenciatura Int         @id @default(autoincrement())
-  licenciatura    String      @db.VarChar(50)
+  licenciatura    String      @db.VarChar(80)
   asesorias       asesorias[]
   grupos          grupos[]
   materias        materias[]
@@ -118,24 +137,33 @@ model licenciaturas {
 model material_adicional {
   id_material    Int        @id @default(autoincrement())
   id_asesoria    Int?
-  nombre_archivo String     @unique @db.VarChar(100)
-  ruta_archivo   String     @unique
+  nombre_archivo String     @db.VarChar(255)
+  drive_file_id  String     @db.VarChar(255)
+  url_archivo    String     @db.Text
   mime_type      String?    @db.VarChar(100)
-  tama_o_archivo Int?       @map("tamaño_archivo")
-  fecha_subida   DateTime?  @db.Timestamp(6)
+  tamano_archivo Int?
+  fecha_subida   DateTime?  @default(now()) @db.DateTime(0)
   asesorias      asesorias? @relation(fields: [id_asesoria], references: [id_asesoria], onDelete: NoAction, onUpdate: NoAction, map: "fk_material_asesoria")
+
+  @@index([id_asesoria], map: "fk_material_asesoria")
 }
 
 model materias {
   id_materia              Int                       @id @default(autoincrement())
-  materia                 String                    @db.VarChar(30)
+  materia                 String                    @db.VarChar(80)
   id_semestre             Int
-  id_licenciatura         Int?
+  id_licenciatura         Int
+  id_plan                 Int
   asesorias               asesorias[]
   disponibilidad_materias disponibilidad_materias[]
+  licenciaturas           licenciaturas             @relation(fields: [id_licenciatura], references: [id_licenciatura], onDelete: NoAction, onUpdate: NoAction, map: "fk_materias_licenciatura")
+  plan_estudios           plan_estudios             @relation(fields: [id_plan], references: [id_plan], onDelete: NoAction, onUpdate: NoAction, map: "fk_materias_plan")
   semestres               semestres                 @relation(fields: [id_semestre], references: [id_semestre], onDelete: NoAction, onUpdate: NoAction, map: "fk_materias_semestre")
-  licenciaturas           licenciaturas?            @relation(fields: [id_licenciatura], references: [id_licenciatura], onDelete: NoAction, onUpdate: NoAction)
   solicitudes_asesorias   solicitudes_asesorias[]
+
+  @@index([id_licenciatura], map: "fk_materias_licenciatura")
+  @@index([id_plan], map: "fk_materias_plan_idx")
+  @@index([id_semestre], map: "fk_materias_semestre")
 }
 
 model modalidades {
@@ -146,20 +174,30 @@ model modalidades {
 }
 
 model personas {
-  id_persona       Int            @id @default(autoincrement())
-  nombre           String         @db.VarChar(30)
-  apellido_paterno String         @db.VarChar(20)
-  apellido_materno String         @db.VarChar(20)
-  correo           String         @unique @db.VarChar(50)
-  num_cel          String         @unique @db.VarChar(15)
+  id_persona       Int        @id @default(autoincrement())
+  nombre           String     @db.VarChar(30)
+  apellido_paterno String     @db.VarChar(20)
+  apellido_materno String     @db.VarChar(20)
+  numero_cuenta    Int?       @unique(map: "numero_cuenta")
+  correo           String     @unique(map: "correo") @db.VarChar(50)
+  num_cel          String?    @unique(map: "num_cel") @db.VarChar(15)
   id_licenciatura  Int?
-  promedio         Decimal?       @db.Decimal(4, 2)
+  promedio         Decimal?   @db.Decimal(4, 2)
   id_grupo         Int?
-  id_estatus       Int            @db.SmallInt
-  estatus          estatus        @relation(fields: [id_estatus], references: [id_estatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_personas_estatus")
-  grupos           grupos?        @relation(fields: [id_grupo], references: [id_grupo], onDelete: NoAction, onUpdate: NoAction, map: "fk_personas_grupo")
+  id_estatus       Int        @default(1)
+  estatus          estatus    @relation(fields: [id_estatus], references: [id_estatus], onDelete: NoAction, onUpdate: NoAction, map: "fk_personas_estatus")
+  grupos           grupos?    @relation(fields: [id_grupo], references: [id_grupo], onDelete: NoAction, onUpdate: NoAction, map: "fk_personas_grupo")
   licenciaturas    licenciaturas? @relation(fields: [id_licenciatura], references: [id_licenciatura], onDelete: NoAction, onUpdate: NoAction, map: "fk_personas_licenciatura")
 
+  usuario_rel      usuarios?  @relation(fields: [id_persona], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction, map: "fk_personas_usuarios")
+  
+  
+  disponibilidad_materias disponibilidad_materias[]
+  disponibilidad_horarios disponibilidad_horarios[]
+
+  @@index([id_estatus], map: "fk_personas_estatus")
+  @@index([id_grupo], map: "fk_personas_grupo")
+  @@index([id_licenciatura], map: "fk_personas_licenciatura")
 }
 
 model razon_asesoria {
@@ -171,7 +209,7 @@ model razon_asesoria {
 
 model roles {
   id_rol   Int        @id @default(autoincrement())
-  rol      String?    @db.VarChar(30)
+  rol      String     @db.VarChar(30)
   usuarios usuarios[]
 }
 
@@ -190,21 +228,38 @@ model solicitudes_asesorias {
   id_asesor          Int
   fecha_inicio       DateTime          @db.Date
   id_razon           Int
-  nota_estudiante    String?
-  explicacion_asesor String?
+  nota_estudiante    String?           @db.Text
+  explicacion_asesor String?           @db.Text
   id_estatus         Int
   estatus_solicitud  estatus_solicitud @relation(fields: [id_estatus], references: [id_estatus_solicitud], onDelete: NoAction, onUpdate: NoAction, map: "fk_solicitudes_estatus")
   horarios           horarios          @relation(fields: [id_horario], references: [id_horario], onDelete: NoAction, onUpdate: NoAction, map: "fk_solicitudes_horario")
   materias           materias          @relation(fields: [id_materia], references: [id_materia], onDelete: NoAction, onUpdate: NoAction, map: "fk_solicitudes_materia")
   modalidades        modalidades       @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction, map: "fk_solicitudes_modalidad")
   razon_asesoria     razon_asesoria    @relation(fields: [id_razon], references: [id_razon], onDelete: NoAction, onUpdate: NoAction, map: "fk_solicitudes_razon")
+
+  @@index([id_estatus], map: "fk_solicitudes_estatus")
+  @@index([id_horario], map: "fk_solicitudes_horario")
+  @@index([id_materia], map: "fk_solicitudes_materia")
+  @@index([id_modalidad], map: "fk_solicitudes_modalidad")
+  @@index([id_razon], map: "fk_solicitudes_razon")
+}
+
+model plan_estudios {
+  id_plan       Int        @id @default(autoincrement())
+  plan_estudios String     @db.VarChar(4)
+  materias      materias[]
 }
 
 model usuarios {
-  id_persona Int    @id
-  usuario    Int    @unique
-  contrasena String @db.VarChar(255)
-  id_rol     Int
-  roles      roles  @relation(fields: [id_rol], references: [id_rol], onDelete: NoAction, onUpdate: NoAction, map: "fk_usuarios_rol")
-  personas   personas @relation(fields: [id_persona], references: [id_persona])
+  id_usuario     Int       @id @default(autoincrement())
+  usuario        String    @unique(map: "numero_cuenta") @db.VarChar(30)
+  password_hash  String    @db.VarChar(255)
+  id_rol         Int
+  activo         Boolean?  @default(true)
+  fecha_creacion DateTime? @default(now()) @db.DateTime(0)
+  roles          roles     @relation(fields: [id_rol], references: [id_rol], onDelete: NoAction, onUpdate: NoAction, map: "usuarios_ibfk_1")
+
+  datos_persona personas?
+
+  @@index([id_rol], map: "id_rol")
 }

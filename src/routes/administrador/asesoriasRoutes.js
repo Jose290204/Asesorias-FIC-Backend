@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const asesoriasControlador = require("../../controllers/administrador/asesoriasController");
+const asesoriasControlador = require("../../controllers/asesoriasController");
 
 /*
 router.get("/", asesoriasControlador.obtenerAsesorias);

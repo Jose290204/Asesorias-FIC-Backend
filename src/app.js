@@ -6,10 +6,9 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 //ROUTERS
-const asesoresParRouter = require('./routes/administrador/asesoresParRoutes');
+const asesoresRouter = require('./routes/administrador/asesoresRoutes');
 const estudiantesRouter = require('./routes/administrador/estudiantesRouters');
 const catalogosRouter = require('./routes/administrador/catalogosRoutes');
-const asesoresDisciRouter = require('./routes/administrador/asesoresDisciplinarRoutes');
 const usuariosRouter = require('./routes/administrador/usuariosRoutes')
 const solicitudesRouter = require('./routes/administrador/solicitudesRoutes')
 const asesoriasRouter = require('./routes/administrador/asesoriasRoutes')
@@ -41,13 +40,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Rutas de los controladores
 
 app.use('/estudiantes', estudiantesRouter);
+app.use('/usuarios', usuariosRouter);
+app.use('/catalogos', catalogosRouter);
+app.use('/asesores', asesoresRouter);
 
 /*
 app.use('/asesores-par', asesoresParRouter);
 
-app.use('/catalogos', catalogosRouter);
+
 app.use('/asesores-disciplinar', asesoresDisciRouter);
-app.use('/usuarios', usuariosRouter);
 app.use('/solicitudes', solicitudesRouter);
 app.use('/asesorias', asesoriasRouter);
 app.use('/solicitar', solicitarRouter);

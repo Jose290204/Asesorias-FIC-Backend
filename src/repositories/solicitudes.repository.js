@@ -3,7 +3,7 @@
 const db = require("../config/dbConfig")
 
 
-
+/*
 async function crearEstudiante(data, connection = db) {
 
         try {
@@ -50,8 +50,9 @@ async function editarEstudiante(id, nuevosDatos, connection = db){
         
     }
 }
+    */
 
-async function getEstudiantes(){
+async function getAsesores(){
 
   return await db.personas.findMany({
     where: {

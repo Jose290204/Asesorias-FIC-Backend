@@ -14,10 +14,29 @@ async function crearUsuario(datos, connection = db){
     }
 }
 
+async function buscarUsuarioLogin(usuario){
+    try {
+        const datosUsuario = await db.usuarios.findUnique({
+            where: {
+                usuario: usuario //busqueda del usuario para ver si existe oara devolver datos y hacer la comparacion de las passwords
+            },
+            include: {
+                datos_persona: true
+            }
+        })
+        return datosUsuario;
+    } catch (error) {
+        console.error("Error buscando usuario", error);
+        throw error
+    }
+}
 
 
 
 
 
 
-module.exports = {crearUsuario}
+
+
+
+module.exports = {crearUsuario, buscarUsuarioLogin}

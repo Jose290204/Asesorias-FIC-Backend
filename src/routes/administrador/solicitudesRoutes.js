@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const solicitudesControlador = require("../../controllers/administrador/solicitudesController");
+const solicitudesControlador = require("../../controllers/solicitudesController");
 
 /*
 router.get("/", solicitudesControlador.obtenerSolicitudes)

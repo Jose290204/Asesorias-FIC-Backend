@@ -22,8 +22,6 @@ async function crearEstudiante(data) {
 
         return {nuevaPersona, nuevoUsuario}
     })
-
-    
 }
 
 module.exports = {getEstudiantes, crearEstudiante}

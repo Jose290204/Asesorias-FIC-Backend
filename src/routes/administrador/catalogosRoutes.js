@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const catalogosControlador = require("../../controllers/administrador/catalogosController");
+const catalogosControlador = require("../../controllers/catalogosController");
+
+router.get("/", catalogosControlador.traerCatalogos);
 
 /*
 router.get("/materias", catalogosControlador.obtenerMaterias);
