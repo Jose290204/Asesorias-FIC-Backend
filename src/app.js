@@ -10,9 +10,8 @@ const asesoresRouter = require('./routes/administrador/asesoresRoutes');
 const estudiantesRouter = require('./routes/administrador/estudiantesRouters');
 const catalogosRouter = require('./routes/administrador/catalogosRoutes');
 const usuariosRouter = require('./routes/administrador/usuariosRoutes')
-const solicitudesRouter = require('./routes/administrador/solicitudesRoutes')
 const asesoriasRouter = require('./routes/administrador/asesoriasRoutes')
-const solicitarRouter = require('./routes/estudiante/solicitarAsesorias')
+const solicitarRouter = require('./routes/estudiante/solicitudesAsesorias')
 
 const app = express();
 
@@ -43,6 +42,7 @@ app.use('/estudiantes', estudiantesRouter);
 app.use('/usuarios', usuariosRouter);
 app.use('/catalogos', catalogosRouter);
 app.use('/asesores', asesoresRouter);
+app.use('/solicitudes', solicitarRouter);
 
 /*
 app.use('/asesores-par', asesoresParRouter);

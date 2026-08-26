@@ -3,68 +3,32 @@
 const db = require("../config/dbConfig")
 
 
-/*
-async function crearEstudiante(data, connection = db) {
+
+async function crearSolicitud(data, connection = db) {
+
+        const [dia, mes, anio] = data.fecha_inicio.split('/');
+        const fechaFormateada = new Date(`${anio}-${mes}-${dia}`);
 
         try {
-            const nuevoEstudiante = await connection.personas.create({
+            const nuevaSolicitud = await connection.solicitudes_asesorias.create({
                 data: {
-                    nombre: data.nombre,
-                    apellido_paterno: data.apellido_paterno,
-                    apellido_materno: data.apellido_materno,
-                    correo: data.correo,
-                    num_cel: data.num_cel,
-                    id_licenciatura: data.id_licenciatura,
-                    promedio: data.promedio,
-                    id_grupo: data.id_grupo,
-                    id_estatus: 1,
+                    id_materia: parseInt(data.id_materia),
+                    id_horario: parseInt(data.id_horario),
+                    id_modalidad: parseInt(data.id_modalidad),
+                    id_estudiante: parseInt(data.id_estudiante),
+                    id_asesor: parseInt(data.id_asesor),
+                    fecha_inicio: fechaFormateada,
+                    id_razon: parseInt(data.id_razon),
+                    nota_estudiante: data.nota_estudiante || null,
+                    id_estatus: 3,
                 }
             });
-            return nuevoEstudiante;
+            return nuevaSolicitud;
         } catch (error) {
-            console.error("Error en el repository", error);
+            console.error("Error en solicitud", error);
             throw error;
         }
     
 }
 
-async function editarEstudiante(id, nuevosDatos, connection = db){
-
-    try {
-        const nuevoDatos = await connection.personas.update({
-            where: {
-                id_persona: id
-            },
-            data: {
-                nombre: data.nombre,
-                apellido_paterno: data.apellido_paterno,
-                apellido_materno: data.apellido_materno,
-                correo: data.correo,
-                num_cel: data.num_cel,
-                id_licenciatura: data.id_licenciatura,
-                promedio: data.promedio,
-                id_grupo: data.id_grupo
-            }
-        })
-    } catch (error) {
-        
-    }
-}
-    */
-
-async function getAsesores(){
-
-  return await db.personas.findMany({
-    where: {
-        id_estatus: 1,
-        usuarios: {
-            id_rol: 3
-        }
-    },
-    include: {
-        usuarios: true
-    }
-  });
-}
-
-module.exports = {getEstudiantes, crearEstudiante}
+module.exports = {crearSolicitud}

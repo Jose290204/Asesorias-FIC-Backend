@@ -47,6 +47,7 @@ async function obtenerCatalogos() {
         catalogos.materias = mat
         catalogos.modalidades = mod
         catalogos.plan_estudios = plan
+        catalogos.razon_asesoria = razon
         catalogos.roles = rol
         catalogos.semestres = sem
 
