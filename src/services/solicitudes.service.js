@@ -1,6 +1,7 @@
 const solicitudesRepository = require("../repositories/solicitudes.repository")
+const db = require("../config/dbConfig")
 
-async function crearSolicitudAsesoria(datos) { //funcion para mandar los datos del usuario al controller para comparar con bycrpt las passwords
+async function crearSolicitudAsesoria(datos) { 
     try {
         const nuevaSolicitud = await solicitudesRepository.crearSolicitud(datos)
         
@@ -12,4 +13,15 @@ async function crearSolicitudAsesoria(datos) { //funcion para mandar los datos d
     
 }
 
-module.exports = {crearSolicitudAsesoria}
+async function traerSolicitudes(){
+    try {
+        const solicitudes = await db.solicitudes_asesorias.findMany();
+
+        return solicitudes;
+    } catch (error) {
+        console.error("Error buscando solicitudes", error);
+        throw error;
+    }
+}
+
+module.exports = {crearSolicitudAsesoria, traerSolicitudes}

@@ -43,6 +43,7 @@ app.use('/usuarios', usuariosRouter);
 app.use('/catalogos', catalogosRouter);
 app.use('/asesores', asesoresRouter);
 app.use('/solicitudes', solicitarRouter);
+app.use('/asesorias', asesoriasRouter);
 
 /*
 app.use('/asesores-par', asesoresParRouter);

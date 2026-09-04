@@ -41,4 +41,18 @@ async function crearSolicitud(req, res) {
    
 }
 
-module.exports = { crearSolicitud};
+async function traerSolicitudes(req, res) {
+    try {
+        const solicitudes = await solicitudesService.traerSolicitudes();
+
+        return res.status(200).json(solicitudes);
+    } catch (error) {
+        return res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+
+
+module.exports = { crearSolicitud, traerSolicitudes};

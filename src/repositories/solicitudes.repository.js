@@ -31,4 +31,5 @@ async function crearSolicitud(data, connection = db) {
     
 }
 
+
 module.exports = {crearSolicitud}

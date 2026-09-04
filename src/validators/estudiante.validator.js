@@ -1,4 +1,4 @@
-const joi = require('Joi');
+const joi = require('joi');
 
 const estudianteSchema = joi.object({
     nombre: joi.
