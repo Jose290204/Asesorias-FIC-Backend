@@ -1,4 +1,4 @@
-const catalogosService = require("../services/catalogos.service");
+const catalogosService = require("./catalogos.service");
 
 
 const traerCatalogos = async(req, res) => {

@@ -1,13 +1,13 @@
-const solicitudesService = require('../services/solicitudes.service');
-const { solicitudesSchema } = require('../validators/solicitudes.validator');
+const AsesoriasService = require('./asesorias.service');
+const { asesoriaSchema } = require('./asesorias.validator');
 
 
 
-async function crearSolicitud(req, res) {
+async function crearAsesoria(req, res) {
    // validar los datos que vienen con el validator
-   const {error, value} = solicitudesSchema.validate(req.body);
+   const {error, value} = asesoriaSchema.validate(req.body);
 
-   if(error){
+   if(error){//si vienen mal los datos, se manda el error
     return res.status(400).json({
         success: false,
         message: "Datos de entrada invalidos",
@@ -17,22 +17,22 @@ async function crearSolicitud(req, res) {
 
    try {
     // si pasa la validacion, enviamos los datos en el value al servicio
-    const nuevaSolicitud = await solicitudesService.crearSolicitudAsesoria(value);
+    const nuevaAsesoria = await AsesoriasService.crearAsesoria(value);
 
-    if(!nuevaSolicitud){
+    if(!nuevaAsesoria){ // si hay error en la solicitud, se manda el error
         return res.status(500).json({
             success: false,
             message: "hubo un error, intente nuevamente"
         })
     }
 
-    return res.status(201).json({
+    return res.status(201).json({ //si todo se inserto correctamente, se regresa el 201 
         success: true,
-        message: "Solicitud registrada correctamente",
-        data: nuevaSolicitud
+        message: "Asesoria registrada correctamente",
+        data: nuevaAsesoria
     })
    } catch (error) {
-    console.error("Error en crearsolicitud controller", error);
+    console.error("Error creando asesoria", error);
     return res.status(500).json({
         success: false,
         error: error.message
@@ -41,6 +41,8 @@ async function crearSolicitud(req, res) {
    
 }
 
+
+/*
 async function traerSolicitudes(req, res) {
     try {
         const solicitudes = await solicitudesService.traerSolicitudes();
@@ -52,7 +54,7 @@ async function traerSolicitudes(req, res) {
         })
     }
 }
+*/
 
 
-
-module.exports = { crearSolicitud, traerSolicitudes};
+module.exports = { crearAsesoria};

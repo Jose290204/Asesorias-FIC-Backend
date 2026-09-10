@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const usuariosControlador = require("../../controllers/usuariosController");
+const usuariosControlador = require("./usuariosController");
 
 const {verificarToken} = require("../../middlewares/auth.middleware");
 

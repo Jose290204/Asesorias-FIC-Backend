@@ -1,4 +1,4 @@
-const db = require("../config/dbConfig")
+const db = require("../../config/dbConfig")
 
 async function crearAsesoria(data, connection = db){
 

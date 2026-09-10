@@ -1,5 +1,5 @@
-const db = require('../config/dbConfig')
-const usuariosRepository = require('../repositories/usuarios.repository')
+const db = require("../../config/dbConfig")
+const usuariosRepository = require('./usuarios.repository')
 
 async function UsuarioExiste(usuario) { //funcion para mandar los datos del usuario al controller para comparar con bycrpt las passwords
     try {

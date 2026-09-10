@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const asesoriasController = require("../../controllers/asesoriasController");
+const asesoriasController = require("./asesoriasController");
 const { verificarToken } = require("../../middlewares/auth.middleware");
 
 // Ruta POST para crear una solicitud de asesoría protegida con JWT

@@ -1,13 +1,13 @@
-const AsesoriasService = require('../services/asesorias.service');
-const { asesoriaSchema } = require('../validators/asesorias.validator');
+const solicitudesService = require('./solicitudes.service');
+const { solicitudesSchema } = require('./solicitudes.validator');
 
 
 
-async function crearAsesoria(req, res) {
+async function crearSolicitud(req, res) {
    // validar los datos que vienen con el validator
-   const {error, value} = asesoriaSchema.validate(req.body);
+   const {error, value} = solicitudesSchema.validate(req.body);
 
-   if(error){//si vienen mal los datos, se manda el error
+   if(error){
     return res.status(400).json({
         success: false,
         message: "Datos de entrada invalidos",
@@ -17,22 +17,22 @@ async function crearAsesoria(req, res) {
 
    try {
     // si pasa la validacion, enviamos los datos en el value al servicio
-    const nuevaAsesoria = await AsesoriasService.crearAsesoria(value);
+    const nuevaSolicitud = await solicitudesService.crearSolicitudAsesoria(value);
 
-    if(!nuevaAsesoria){ // si hay error en la solicitud, se manda el error
+    if(!nuevaSolicitud){
         return res.status(500).json({
             success: false,
             message: "hubo un error, intente nuevamente"
         })
     }
 
-    return res.status(201).json({ //si todo se inserto correctamente, se regresa el 201 
+    return res.status(201).json({
         success: true,
-        message: "Asesoria registrada correctamente",
-        data: nuevaAsesoria
+        message: "Solicitud registrada correctamente",
+        data: nuevaSolicitud
     })
    } catch (error) {
-    console.error("Error creando asesoria", error);
+    console.error("Error en crearsolicitud controller", error);
     return res.status(500).json({
         success: false,
         error: error.message
@@ -41,8 +41,6 @@ async function crearAsesoria(req, res) {
    
 }
 
-
-/*
 async function traerSolicitudes(req, res) {
     try {
         const solicitudes = await solicitudesService.traerSolicitudes();
@@ -54,7 +52,7 @@ async function traerSolicitudes(req, res) {
         })
     }
 }
-*/
 
 
-module.exports = { crearAsesoria};
+
+module.exports = { crearSolicitud, traerSolicitudes};

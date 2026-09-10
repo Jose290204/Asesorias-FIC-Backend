@@ -1,5 +1,5 @@
-const db = require('../config/dbConfig')
-const catalogosRepository = require('../repositories/catalogos.repository')
+const db = require("../../config/dbConfig")
+const catalogosRepository = require('./catalogos.repository')
 
 async function getCatalogos() {
     try {

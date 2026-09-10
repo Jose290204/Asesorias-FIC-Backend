@@ -1,5 +1,5 @@
-const db = require('../config/dbConfig')
-const asesoresRepository = require('../repositories/asesores.repository')
+const db = require("../../config/dbConfig")
+const asesoresRepository = require('./asesores.repository')
 
 async function traerAsesores() { //funcion para mandar los datos del usuario al controller para comparar con bycrpt las passwords
     try {

@@ -1,6 +1,6 @@
-const estudiantesRepository = require("../repositories/estudiantes.repository")
-const usuariosRepository = require("../repositories/usuarios.repository")
-const db = require("../config/dbConfig")
+const estudiantesRepository = require("./estudiantes.repository")
+const usuariosRepository = require("../usuarios/usuarios.repository")
+const db = require("../../config/dbConfig")
 
 async function getEstudiantes(){
     return await estudiantesRepository.getEstudiantes();

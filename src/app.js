@@ -6,12 +6,12 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 //ROUTERS
-const asesoresRouter = require('./routes/administrador/asesoresRoutes');
-const estudiantesRouter = require('./routes/administrador/estudiantesRouters');
-const catalogosRouter = require('./routes/administrador/catalogosRoutes');
-const usuariosRouter = require('./routes/administrador/usuariosRoutes')
-const asesoriasRouter = require('./routes/administrador/asesoriasRoutes')
-const solicitarRouter = require('./routes/estudiante/solicitudesAsesorias')
+const asesoresRouter = require('./modules/asesores/asesoresRoutes');
+const estudiantesRouter = require('./modules/estudiantes/estudiantesRoutes');
+const catalogosRouter = require('./modules/catalogos/catalogosRoutes');
+const usuariosRouter = require('./modules/usuarios/usuariosRoutes')
+const asesoriasRouter = require('./modules/asesorias/asesoriasRoutes')
+const solicitarRouter = require('./modules/solicitudes/solicitudesRoutes')
 
 const app = express();
 

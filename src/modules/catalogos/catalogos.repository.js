@@ -1,4 +1,4 @@
-const db = require("../config/dbConfig")
+const db = require("../../config/dbConfig")
 
 async function obtenerCatalogos() {
     let catalogos = { //objeto que trae todos los catalogos

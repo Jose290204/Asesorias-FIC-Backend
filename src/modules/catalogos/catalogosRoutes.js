@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const catalogosControlador = require("../../controllers/catalogosController");
+const catalogosControlador = require("./catalogosController");
 
 router.get("/", catalogosControlador.traerCatalogos);
 

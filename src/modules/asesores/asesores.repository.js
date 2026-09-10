@@ -1,5 +1,5 @@
 
-const db = require("../config/dbConfig")
+const db = require("../../config/dbConfig")
 
 
 async function getAsesores(){

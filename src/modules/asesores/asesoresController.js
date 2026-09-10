@@ -1,5 +1,5 @@
-const asesoresService = require("../services/asesores.service")
-const { estudianteSchema } = require("../validators/estudiante.validator")
+const asesoresService = require("./asesores.service")
+const { estudianteSchema } = require("../estudiantes/estudiante.validator")
 
 async function getAsesores(req, res){
     try {

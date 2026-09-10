@@ -1,5 +1,5 @@
-const usuariosService = require('../services/usuarios.service');
-const { usuariosSchema } = require('../validators/usuarios.validator');
+const usuariosService = require('./usuarios.service');
+const { usuariosSchema } = require('./usuarios.validator');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 

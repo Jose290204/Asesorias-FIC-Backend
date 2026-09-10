@@ -1,5 +1,5 @@
-const solicitudesRepository = require("../repositories/solicitudes.repository")
-const db = require("../config/dbConfig")
+const solicitudesRepository = require("./solicitudes.repository")
+const db = require("../../config/dbConfig")
 
 async function crearSolicitudAsesoria(datos) { 
     try {
