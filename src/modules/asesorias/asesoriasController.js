@@ -41,20 +41,24 @@ async function crearAsesoria(req, res) {
    
 }
 
-
-/*
-async function traerSolicitudes(req, res) {
+async function getAsesoriasEnCurso(req, res) {
     try {
-        const solicitudes = await solicitudesService.traerSolicitudes();
+        const asesorias = await AsesoriasService.getAsesoriasActivas();
 
-        return res.status(200).json(solicitudes);
+        return res.status(200).json({
+            success: true,
+            data: asesorias
+        });
+
     } catch (error) {
+        console.error("Error en asesorias controller, getAsesoriasEnCurso", error);
+
         return res.status(500).json({
-            error: error.message
-        })
+            success: false,
+            message: "Error al obtener las asesorias activas"
+        });
     }
 }
-*/
 
 
-module.exports = { crearAsesoria};
+module.exports = { crearAsesoria, getAsesoriasEnCurso};

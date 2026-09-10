@@ -18,14 +18,25 @@ async function crearAsesoria(data, connection = db){
                 sesiones_tomadas: data.sesiones_tomadas,
                 observaciones: data.observaciones,
                 id_estatus_asesoria: 3,
-                id_horario: data.id_horario
+                id_horario: parseInt(data.id_horario)
             }
         })
 
         return nuevaAsesoria;
-   
-
     
 }
 
-module.exports = { crearAsesoria }
+async function getAsesoriasEnCurso(connection = db) {
+    const Asesorias = await connection.asesorias.findMany({
+        where: {
+            id_estatus_asesoria: 3
+        },
+        include: {
+            material_adicional: true
+        }
+    })
+
+    return Asesorias;
+}
+
+module.exports = { crearAsesoria, getAsesoriasEnCurso }

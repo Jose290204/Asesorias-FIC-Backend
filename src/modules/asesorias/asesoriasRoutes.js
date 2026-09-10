@@ -6,5 +6,6 @@ const { verificarToken } = require("../../middlewares/auth.middleware");
 
 // Ruta POST para crear una solicitud de asesoría protegida con JWT
 router.post("/", verificarToken, asesoriasController.crearAsesoria);
+router.get("/", verificarToken, asesoriasController.getAsesoriasEnCurso);
 
 module.exports = router;

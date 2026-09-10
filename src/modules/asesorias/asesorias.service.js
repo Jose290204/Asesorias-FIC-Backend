@@ -14,4 +14,14 @@ async function crearAsesoria(data) { //funcion para mandar los datos del usuario
     
 }
 
-module.exports = {crearAsesoria}
+async function getAsesoriasActivas() {
+    try {
+        const asesorias = await AsesoriasRepository.getAsesoriasEnCurso();
+        return asesorias;
+    } catch (error) {
+        console.error("error al obtener asesorias activas", error);
+        throw error;
+    }
+}
+
+module.exports = {crearAsesoria, getAsesoriasActivas}
