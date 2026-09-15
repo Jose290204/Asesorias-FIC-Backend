@@ -52,6 +52,11 @@ async function getAsesoriasEnCurso(connection = db) {
           apellido_paterno: true,
           apellido_materno: true
         }
+      },
+      horarios: {
+        select: {
+          horario: true
+        }
       }
     }
   });

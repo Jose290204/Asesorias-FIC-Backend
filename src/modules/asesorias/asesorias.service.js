@@ -20,8 +20,8 @@ async function getAsesoriasActivas() {
   const asesorias = await asesoriasRepository.getAsesoriasEnCurso();
 
   return asesorias.map(item => {
-    // 1. Extraemos las relaciones del objeto para no mandarlas anidadas
-    const { estudiante, asesor, materias, ...restoDeCampos } = item;
+    // 1. Extraemos 'horarios' junto con las demás relaciones
+    const { estudiante, asesor, materias, horarios, ...restoDeCampos } = item;
 
     // 2. Formateamos los nombres completos
     const estudianteNombre = estudiante 
@@ -32,12 +32,13 @@ async function getAsesoriasActivas() {
       ? `${asesor.nombre} ${asesor.apellido_paterno} ${asesor.apellido_materno || ''}`.trim() 
       : 'Sin asignar';
 
-    // 3. Devolvemos TODOS los campos del registro + los nombres formateados
+    // 3. Devolvemos el objeto plano con la propiedad 'horario' agregada
     return {
-      ...restoDeCampos, // Conserva: id_asesoria, id_estudiante, id_asesor, id_materia, id_modalidad, id_razon, id_licenciatura, id_estatus_asesoria, id_horario, observaciones, sesiones_tomadas, etc.
+      ...restoDeCampos, // Conserva id_asesoria, id_estudiante, fecha_inicio, etc.
       estudiante: estudianteNombre,
       asesor: asesorNombre,
-      materia: materias?.materia || ''
+      materia: materias?.materia || '',
+      horario: horarios?.horario || 'Sin horario asignado' // 👈 Horario en texto plano
     };
   });
 }

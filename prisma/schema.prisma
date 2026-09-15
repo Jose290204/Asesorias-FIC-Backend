@@ -32,6 +32,8 @@ model asesorias {
   materias             materias               @relation(fields: [id_materia], references: [id_materia], onDelete: NoAction, onUpdate: NoAction)
   modalidades          modalidades            @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction)
   razon_asesoria       razon_asesoria         @relation(fields: [id_razon], references: [id_razon], onDelete: NoAction, onUpdate: NoAction)
+  horarios             horarios?              @relation(fields: [id_horario], references: [id_horario], onDelete: NoAction, onUpdate: NoAction)
+  
   chats                chats[]
   evidencias_asesorias evidencias_asesorias[]
   material_adicional   material_adicional[]
@@ -43,6 +45,7 @@ model asesorias {
   @@index([id_razon])
   @@index([id_estudiante])
   @@index([id_asesor])
+  @@index([id_horario])
 }
 
 model chats {
@@ -131,6 +134,7 @@ model horarios {
   horario                 String                    @db.VarChar(15)
   disponibilidad_horarios disponibilidad_horarios[]
   solicitudes_asesorias   solicitudes_asesorias[]
+  asesorias  asesorias[]
 }
 
 model licenciaturas {
