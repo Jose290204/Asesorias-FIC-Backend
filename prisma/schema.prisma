@@ -21,11 +21,17 @@ model asesorias {
   observaciones        String?                @db.Text
   id_estatus_asesoria  Int?
   id_horario           Int?                   @default(0)
+
+  
+  estudiante           personas               @relation("EstudianteAsesorias", fields: [id_estudiante], references: [id_persona], onDelete: NoAction, onUpdate: NoAction)
+  asesor               personas               @relation("AsesorAsesorias", fields: [id_asesor], references: [id_persona], onDelete: NoAction, onUpdate: NoAction)
+
+  // Relaciones existentes
   estatus_asesorias    estatus_asesorias?     @relation(fields: [id_estatus_asesoria], references: [id_estatus_asesoria], onDelete: NoAction, onUpdate: NoAction)
   licenciaturas        licenciaturas          @relation(fields: [id_licenciatura], references: [id_licenciatura], onDelete: NoAction, onUpdate: NoAction)
   materias             materias               @relation(fields: [id_materia], references: [id_materia], onDelete: NoAction, onUpdate: NoAction)
   modalidades          modalidades            @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction)
-  razon_asesoria        razon_asesoria         @relation(fields: [id_razon], references: [id_razon], onDelete: NoAction, onUpdate: NoAction)
+  razon_asesoria       razon_asesoria         @relation(fields: [id_razon], references: [id_razon], onDelete: NoAction, onUpdate: NoAction)
   chats                chats[]
   evidencias_asesorias evidencias_asesorias[]
   material_adicional   material_adicional[]
@@ -35,6 +41,8 @@ model asesorias {
   @@index([id_materia])
   @@index([id_modalidad])
   @@index([id_razon])
+  @@index([id_estudiante])
+  @@index([id_asesor])
 }
 
 model chats {
@@ -192,6 +200,9 @@ model personas {
   usuario_rel             usuarios?                 @relation(fields: [id_persona], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
   disponibilidad_materias disponibilidad_materias[]
   disponibilidad_horarios disponibilidad_horarios[]
+
+  asesorias_estudiante    asesorias[] @relation("EstudianteAsesorias")
+  asesorias_asesor        asesorias[] @relation("AsesorAsesorias")
 
   @@index([id_estatus])
   @@index([id_grupo])
