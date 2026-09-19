@@ -1,4 +1,5 @@
-const db = require("../../config/dbConfig")
+const db = require("../../config/dbConfig");
+const { eliminarArchivoDeDrive, subirArchivoADrive } = require("../../utils/googleDrive.service");
 const asesoriasRepository = require('./asesorias.repository')
 
 async function crearAsesoria(data) { //funcion para mandar los datos del usuario al controller para comparar con bycrpt las passwords
@@ -117,4 +118,48 @@ async function editarAsesoria(id,data) {
   return await asesoriasRepository.editarAsesoria(id, data);
 }
 
-module.exports = {crearAsesoria, getAsesoriasActivas, finalizarAsesoria, eliminarAsesoria, editarAsesoria}
+async function eliminarMaterialAdicional(id_material){
+
+  // obtener los datos del archivo en BD para saacar el drive_file_id
+  const material = await asesoriasRepository.obtenerMaterialPorId(id_material);
+  if(!material){
+    const error = new Error("El archivo no existe");
+    error.status = 404;
+    throw error;
+  }
+
+  // eliminar el archivo de drive
+  if(material.drive_file_id){
+    await eliminarArchivoDeDrive(material.drive_file_id);
+  }
+
+  //eliminar el registro de la bd 
+  return await asesoriasRepository.eliminarMaterialBD(id_material)
+}
+
+async function subirMaterialAdicional(id_asesoria, files){
+  const resultados = []; // se agregan cada archivo nuevo
+
+  for(const file of files){
+
+    // Subir archivo a Drive ()
+    const driveData = await subirArchivoADrive(file);
+
+    // Insertar registro a la BD obteniendo l
+    const nuevoRegistro = await asesoriasRepository.guardarMaterialAdicional({
+      id_asesoria: Number(id_asesoria),
+      nombre_archivo: file.originalname,  
+      drive_file_id: driveData.drive_file_id, 
+      url_archivo: driveData.url_archivo,     
+      mime_type: file.mimetype,           
+      tamano_archivo: file.size           
+    });
+
+    // Se pushea cada vez que se agrega un nuevo registro
+    resultados.push(nuevoRegistro);
+  }
+
+  return resultados;
+}
+
+module.exports = {crearAsesoria, getAsesoriasActivas, finalizarAsesoria, eliminarAsesoria, editarAsesoria, eliminarMaterialAdicional, subirMaterialAdicional}

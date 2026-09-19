@@ -53,6 +53,82 @@ async function traerSolicitudes(req, res) {
     }
 }
 
+async function aceptarSolicitud(req, res){
+    try {
+        const { id } = req.params //recibimos el id de la solicitud
+
+        const id_solicitud = Number(id);
+
+        if(!id_solicitud){ //validamos si el id_asesoria viene bien
+            return res.status(400).json({
+                success: false,
+                message: "EL ID de la solicitud es requerido"
+            })
+        } 
+        else if(!Number.isInteger(id_solicitud) || id_solicitud <= 0){
+            return res.status(400).json({
+                success: false,
+                message: "EL ID de la solicitud debe ser un numero entero positivo"
+            })
+        }
+
+        //llamamos el service
+        await solicitudesService.aceptarSolicitud(id_solicitud);
+
+        return res.status(200).json({
+            success: true,
+            message: "La solicitud fue aceptada exitosamente"
+        })
+    } catch (error) {
+         console.error(error);
+
+        const StatusCode = error.status || 500
+
+        return res.status(StatusCode).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
+async function rechazarSolicitud(req, res){
+    try {
+        const { id } = req.params //recibimos el id de la solicitud
+
+        const id_solicitud = Number(id);
+
+        if(!id_solicitud){ //validamos si el id_asesoria viene bien
+            return res.status(400).json({
+                success: false,
+                message: "EL ID de la solicitud es requerido"
+            })
+        } 
+        else if(!Number.isInteger(id_solicitud) || id_solicitud <= 0){
+            return res.status(400).json({
+                success: false,
+                message: "EL ID de la solicitud debe ser un numero entero positivo"
+            })
+        }
+
+        //llamamos el service
+        await solicitudesService.rechazarSolicitud(id_solicitud);
+
+        return res.status(200).json({
+            success: true,
+            message: "La solicitud fue rechazada exitosamente"
+        })
+    } catch (error) {
+         console.error(error);
+
+        const StatusCode = error.status || 500
+
+        return res.status(StatusCode).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
 
 
-module.exports = { crearSolicitud, traerSolicitudes};
+
+module.exports = { crearSolicitud, traerSolicitudes, aceptarSolicitud, rechazarSolicitud};

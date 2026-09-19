@@ -173,5 +173,72 @@ async function editarAsesoria(req, res) {
    
 }
 
+async function agregarMaterial(req, res) {
+    try {
+        const { id_asesoria } = req.body;
+        const files = req.files;
 
-module.exports = { crearAsesoria, getAsesoriasEnCurso, completarAsesoria, eliminarAsesoria, editarAsesoria};
+        if (!id_asesoria) {
+            return res.status(400).json({
+                success: false,
+                message: "El id_asesoria es requerido"
+            });
+        }
+
+        if (!files || files.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No se enviaron archivos para subir"
+            });
+        }
+
+        const data = await AsesoriasService.subirMaterialAdicional(id_asesoria, files);
+
+        return res.status(201).json({
+            success: true,
+            message: "Material adicional subido correctamente",
+            data
+        });
+    } catch (error) {
+        console.error(error);
+
+        const statusCode = error.status || 500;
+
+        return res.status(statusCode).json({
+            success: false,
+            message: error.message || "Error al subir el material adicional"
+        });
+    }
+}
+
+async function eliminarMaterial(req, res) {
+    try {
+        const { id_material } = req.params;
+
+        if (!id_material) {
+            return res.status(400).json({
+                success: false,
+                message: "El parámetro id_material es requerido"
+            });
+        }
+
+        await AsesoriasService.eliminarMaterialAdicional(id_material);
+
+        return res.status(200).json({
+            success: true,
+            message: "Material adicional eliminado correctamente"
+        });
+    } catch (error) {
+        console.error(error);
+
+        const statusCode = error.status || 500;
+
+        return res.status(statusCode).json({
+            success: false,
+            message: error.message || "Error al eliminar el material adicional"
+        });
+    }
+}
+
+
+module.exports = { crearAsesoria, getAsesoriasEnCurso, completarAsesoria, eliminarAsesoria, editarAsesoria, agregarMaterial, eliminarMaterial};

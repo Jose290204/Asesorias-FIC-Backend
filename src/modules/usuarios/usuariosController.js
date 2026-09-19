@@ -17,11 +17,14 @@ const login = async(req, res) => {
     try {
         const credencialesUsuario = value //los datos que ingreso el usuario
         const usuarioExiste = await usuariosService.UsuarioExiste(credencialesUsuario.usuario)
-        const datosPersona = usuarioExiste.datos_persona //los datos personales del usuario
 
         if(!usuarioExiste){ //si el usuario no existe 
             return res.status(401).json({message: "el usuario no existe, ingrese un usuario nuevo"})
         }
+
+        const datosPersona = usuarioExiste.datos_persona //los datos personales del usuario
+
+        
 
         const passwordValida = await bcrypt.compare(credencialesUsuario.password_hash, usuarioExiste.password_hash); // se compara lo que ingreso el usuario con lo de la bd
 

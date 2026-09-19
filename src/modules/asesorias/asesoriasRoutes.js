@@ -3,8 +3,9 @@ const router = express.Router();
 
 const asesoriasController = require("./asesoriasController");
 const { verificarToken } = require("../../middlewares/auth.middleware");
+const upload = require("../../middlewares/upload.middleware"); // IMPORTAR MULTER
 
-// Ruta POST para crear una solicitud de asesoría protegida con JWT
+// Ruta POST para crear una solicitud de asesoria protegida con JWT
 router.post("/", verificarToken, asesoriasController.crearAsesoria);
 
 //obtener asesorias en curso
@@ -19,5 +20,12 @@ router.delete("/:id/eliminar", verificarToken, asesoriasController.eliminarAseso
 //editar una asesoria
 router.patch("/:id/editar", verificarToken, asesoriasController.editarAsesoria);
 
+
+
+// subir material adicional (usa upload.array para recibir multiples archivos)
+router.post("/material", verificarToken, upload.array("archivos"), asesoriasController.agregarMaterial);
+
+// eliminar un archivo de drive
+router.delete("/material/:id_material", verificarToken, asesoriasController.eliminarMaterial);
 
 module.exports = router;

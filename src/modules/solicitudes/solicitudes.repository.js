@@ -9,7 +9,7 @@ async function crearSolicitud(data, connection = db) {
         const [dia, mes, anio] = data.fecha_inicio.split('/');
         const fechaFormateada = new Date(`${anio}-${mes}-${dia}`);
 
-        try {
+
             const nuevaSolicitud = await connection.solicitudes_asesorias.create({
                 data: {
                     id_materia: parseInt(data.id_materia),
@@ -24,12 +24,44 @@ async function crearSolicitud(data, connection = db) {
                 }
             });
             return nuevaSolicitud;
-        } catch (error) {
-            console.error("Error en solicitud", error);
-            throw error;
-        }
     
 }
 
+async function aceptarSolicitud(id){
 
-module.exports = {crearSolicitud}
+    const solicitudAceptada = await db.solicitudes_asesorias.update({ // se hace el update para marcar completada la solicitud
+        where: { id_solicitud: id},
+        data: {
+            id_estatus: 1 // se cambia a 1 para marcar como completada
+        }
+
+    })
+
+    return solicitudAceptada;
+}
+
+async function obtenerPorId(id) {
+    
+    const solicitudExistente = await db.solicitudes_asesorias.findUnique({
+        where: {id_solicitud: id }
+    })
+
+    return solicitudExistente;
+}
+
+async function eliminarSolicitud(id){
+
+    const solicitudEliminada = await db.solicitudes_asesorias.update({ // se hace el update para marcar rechaza la solicitud
+        where: { id_solicitud: id},
+        data: {
+            id_estatus: 2 // se cambia a 1 para marcar como rechazada
+        }
+
+    })
+
+    return solicitudEliminada;
+}
+
+
+
+module.exports = {crearSolicitud, aceptarSolicitud, obtenerPorId, eliminarSolicitud}

@@ -130,4 +130,31 @@ async function editarAsesoria(idAsesoria, data){
     
 }
 
-module.exports = { crearAsesoria, getAsesoriasEnCurso, completarAsesoria, eliminarAsesoria, obtenerPorId, editarAsesoria }
+async function guardarMaterialAdicional(data) {
+  return await db.material_adicional.create({
+    data: {
+            id_asesoria: data.id_asesoria,
+            nombre_archivo: data.nombre_archivo,
+            drive_file_id: data.drive_file_id,
+            url_archivo: data.url_archivo,
+            mime_type: data.mime_type,
+            tamano_archivo: data.tamano_archivo,
+        },
+  })
+}
+
+const obtenerMaterialPorId = async (id_material) => {
+    return await db.material_adicional.findUnique({
+        where: { id_material: Number(id_material) }
+    });
+};
+
+const eliminarMaterialBD = async (id_material) => {
+    return await db.material_adicional.delete({
+        where: { id_material: Number(id_material) }
+    });
+};
+
+module.exports = { crearAsesoria, getAsesoriasEnCurso, completarAsesoria, eliminarAsesoria, obtenerPorId, editarAsesoria, guardarMaterialAdicional, 
+  obtenerMaterialPorId, eliminarMaterialBD
+ }
