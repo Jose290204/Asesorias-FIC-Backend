@@ -21,9 +21,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Configuración de CORS
 app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    // credentials: true, // Si necesitas enviar cookies o encabezados personalizados
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    credentials: true,
 }));
 
 // Middleware de log, body parser y cookie parser

@@ -208,6 +208,9 @@ model personas {
   asesorias_estudiante    asesorias[] @relation("EstudianteAsesorias")
   asesorias_asesor        asesorias[] @relation("AsesorAsesorias")
 
+  solicitudes_estudiante  solicitudes_asesorias[] @relation("EstudianteSolicitudes")
+  solicitudes_asesor      solicitudes_asesorias[] @relation("AsesorSolicitudes")
+
   @@index([id_estatus])
   @@index([id_grupo])
   @@index([id_licenciatura])
@@ -249,6 +252,8 @@ model solicitudes_asesorias {
   materias           materias          @relation(fields: [id_materia], references: [id_materia], onDelete: NoAction, onUpdate: NoAction)
   modalidades        modalidades       @relation(fields: [id_modalidad], references: [id_modalidad], onDelete: NoAction, onUpdate: NoAction)
   razon_asesoria     razon_asesoria    @relation(fields: [id_razon], references: [id_razon], onDelete: NoAction, onUpdate: NoAction)
+  estudiante         personas          @relation("EstudianteSolicitudes", fields: [id_estudiante], references: [id_persona], onDelete: NoAction, onUpdate: NoAction)
+  asesor             personas          @relation("AsesorSolicitudes", fields: [id_asesor], references: [id_persona], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([id_estatus])
   @@index([id_horario])

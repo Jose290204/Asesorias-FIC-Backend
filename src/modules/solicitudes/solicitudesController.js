@@ -43,9 +43,29 @@ async function crearSolicitud(req, res) {
 
 async function traerSolicitudes(req, res) {
     try {
-        const solicitudes = await solicitudesService.traerSolicitudes();
+        const { id_asesor } = req.query;
 
-        return res.status(200).json(solicitudes);
+        let solicitudes
+
+        //si id_asesor no es undefined
+        if(id_asesor !== undefined){
+            idAsesorNum = Number(id_asesor);
+
+            //si id_asesor no es numero entero positivo
+            if(!Number.isInteger(idAsesorNum) || idAsesorNum <= 0){
+                return res.status(400).json({
+                    success: false,
+                    message: "El ID del asesor debe ser un numero entero positivo"
+                })
+            }
+        }
+        solicitudes = await solicitudesService.obtenerSolicitudes(idAsesorNum)
+
+        return res.status(200).json({
+            success: true,
+            message: "Solicitudes obtenidas exitosamente",
+            data: solicitudes
+        });
     } catch (error) {
         return res.status(500).json({
             error: error.message
@@ -94,6 +114,7 @@ async function aceptarSolicitud(req, res){
 async function rechazarSolicitud(req, res){
     try {
         const { id } = req.params //recibimos el id de la solicitud
+        const { razon } = req.body //recibimos la razon del rechazo
 
         const id_solicitud = Number(id);
 
@@ -103,6 +124,14 @@ async function rechazarSolicitud(req, res){
                 message: "EL ID de la solicitud es requerido"
             })
         } 
+
+        if(!razon){//validamos si viene la razon del rechazo
+             return res.status(400).json({
+                success: false,
+                message: "Debe especificar la razón del rechazo"
+            })
+
+        }
         else if(!Number.isInteger(id_solicitud) || id_solicitud <= 0){
             return res.status(400).json({
                 success: false,
@@ -111,8 +140,8 @@ async function rechazarSolicitud(req, res){
         }
 
         //llamamos el service
-        await solicitudesService.rechazarSolicitud(id_solicitud);
-
+        await solicitudesService.rechazarSolicitud(id_solicitud, razon);
+        
         return res.status(200).json({
             success: true,
             message: "La solicitud fue rechazada exitosamente"
@@ -128,6 +157,8 @@ async function rechazarSolicitud(req, res){
         })
     }
 }
+
+
 
 
 

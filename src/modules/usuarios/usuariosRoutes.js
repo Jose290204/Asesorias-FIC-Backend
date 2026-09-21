@@ -5,14 +5,10 @@ const usuariosControlador = require("./usuariosController");
 
 const {verificarToken} = require("../../middlewares/auth.middleware");
 
-
 router.post("/login", usuariosControlador.login);
 
-router.get("/", verificarToken, (req, res) => {
-    res.json({
-        message: "estoy en tu cesped nebercracket",
-        datos_sesion: req.usuario
-    });
-});
+router.get("/perfil", verificarToken, usuariosControlador.getPerfil);
+
+router.post("/logout", usuariosControlador.logout);
 
 module.exports = router;

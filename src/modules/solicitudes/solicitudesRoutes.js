@@ -14,6 +14,6 @@ router.get("/", verificarToken, solicitudesController.traerSolicitudes)
 router.patch("/:id", verificarToken, solicitudesController.aceptarSolicitud);
 
 //eliminar solicitudes
-router.delete("/:id", verificarToken, solicitudesController.rechazarSolicitud);
+router.post("/:id", verificarToken, solicitudesController.rechazarSolicitud);
 
 module.exports = router;
