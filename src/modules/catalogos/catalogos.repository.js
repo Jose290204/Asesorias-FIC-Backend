@@ -17,6 +17,21 @@ async function obtenerCatalogos() {
         semestres: []
     }
 
+    function obtenerNombreLicenciatura(id_licenciatura) {
+    switch (id_licenciatura) {
+        case 1:
+            return 'Informática';
+        case 2:
+            return 'Informática Virtual';
+        case 3:
+            return 'Ciencia de Datos';
+        case 4:
+            return 'ITSE'
+        default:
+            return '';
+    }
+}
+
     try {
         // se traen los catalogos
 
@@ -28,7 +43,7 @@ async function obtenerCatalogos() {
             db.grupos.findMany(),
             db.horarios.findMany(),
             db.licenciaturas.findMany(),
-            db.materias.findMany(),
+            db.materias.findMany({ where: {id_plan: 2}}),
             db.modalidades.findMany(),
             db.plan_estudios.findMany(),
             db.razon_asesoria.findMany(),
@@ -36,15 +51,28 @@ async function obtenerCatalogos() {
             db.semestres.findMany()
         ])
 
+        // hacemos el mapeo: le concatenamos el nombre de la licenciatura al nombre de la materia
+        const materiasConLicenciatura = mat.map((materia) => ({
+            ...materia,
+            materia: `${materia.materia} - ${obtenerNombreLicenciatura(materia.id_licenciatura)}`
+        }));
+
+        // hacemos el mapeo: le concatenamos el nombre de la licenciatura al grupo
+        const gruposConLicenciatura = gru.map((grupo) => ({
+            ...grupo,
+            grupo: `${grupo.grupo} - ${obtenerNombreLicenciatura(grupo.id_licenciatura)}`
+        }));
+
+
 
         catalogos.dias_semana = dias
         catalogos.estatus = est
         catalogos.estatus_asesoria = esta
         catalogos.estatus_solicitud = ests
-        catalogos.grupos = gru
+        catalogos.grupos = gruposConLicenciatura
         catalogos.horarios = hor
         catalogos.licenciaturas = lic
-        catalogos.materias = mat
+        catalogos.materias = materiasConLicenciatura
         catalogos.modalidades = mod
         catalogos.plan_estudios = plan
         catalogos.razon_asesoria = razon

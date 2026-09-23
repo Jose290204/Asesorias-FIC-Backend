@@ -65,6 +65,7 @@ async function eliminarSolicitud(id, razon){
 
 async function obtenerTodasLasSolicitudes(){
 
+
     //traemos las solicitudes
     const solicitudes = await db.solicitudes_asesorias.findMany({
         include: {
@@ -74,6 +75,7 @@ async function obtenerTodasLasSolicitudes(){
                 nombre: true,
                 apellido_paterno: true,
                 apellido_materno: true,
+                correo: true
             }
           },
             asesor: {
@@ -92,6 +94,8 @@ async function obtenerTodasLasSolicitudes(){
         }
     })
 
+    
+
     //hacemos un map para juntar el nombre completo de los usuarios y cmabiar la propiedad del id
     return solicitudes.map((solicitud) => ({
         id_solicitud: solicitud.id_solicitud,
@@ -99,6 +103,7 @@ async function obtenerTodasLasSolicitudes(){
         nombre_asesor: `${solicitud.asesor.nombre} ${solicitud.asesor.apellido_paterno} ${solicitud.asesor.apellido_materno}`,
         id_estudiante: solicitud.id_estudiante,
         nombre_estudiante: `${solicitud.estudiante.nombre} ${solicitud.estudiante.apellido_paterno} ${solicitud.estudiante.apellido_materno}`,
+        correo: solicitud.estudiante.correo,
         id_materia: solicitud.materias.id_materia,
         materia: solicitud.materias.materia,
         id_horario: solicitud.id_horario,
@@ -111,7 +116,7 @@ async function obtenerTodasLasSolicitudes(){
         nota_estudiante: solicitud.nota_estudiante,
         explicacion_asesor: solicitud.explicacion_asesor,
         id_estatus_solicitud: solicitud.id_estatus,
-        estatus_solicitud: solicitudes.estatus_solicitud.estatus_solicitud
+        estatus_solicitud: solicitud.estatus_solicitud.estatus_solicitud
 
 
     }))
@@ -131,6 +136,7 @@ async function obtenerSolicitudesPorAsesor(id){
                     nombre: true,
                     apellido_paterno: true,
                     apellido_materno: true,
+                    correo: true
                 }
             },
             asesor: {
@@ -161,6 +167,7 @@ async function obtenerSolicitudesPorAsesor(id){
         nombre_asesor: `${solicitud.asesor.nombre} ${solicitud.asesor.apellido_paterno} ${solicitud.asesor.apellido_materno}`,
         id_estudiante: solicitud.id_estudiante,
         nombre_estudiante: `${solicitud.estudiante.nombre} ${solicitud.estudiante.apellido_paterno} ${solicitud.estudiante.apellido_materno}`,
+        correo: solicitud.estudiante.correo,
         id_materia: solicitud.materias.id_materia,
         materia: solicitud.materias.materia,
         id_horario: solicitud.id_horario,

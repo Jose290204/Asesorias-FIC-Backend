@@ -3,23 +3,9 @@ const db = require("../../config/dbConfig")
 
 async function crearAsesoria(data, client = db){
 
-    
-
 
         const nuevaAsesoria = await client.asesorias.create({
-            data: {
-                id_estudiante: parseInt(data.id_estudiante),
-                id_asesor: parseInt(data.id_asesor),
-                id_materia: parseInt(data.id_materia),
-                id_modalidad: parseInt(data.id_modalidad),
-                fecha_inicio: data.fecha_inicio,
-                id_razon: parseInt(data.id_razon),
-                id_licenciatura: parseInt(data.id_licenciatura),
-                sesiones_tomadas: data.sesiones_tomadas,
-                observaciones: data.observaciones,
-                id_estatus_asesoria: 3,
-                id_horario: parseInt(data.id_horario)
-            }
+            data
         })
 
         return nuevaAsesoria;
@@ -154,6 +140,47 @@ const eliminarMaterialBD = async (id_material) => {
     });
 };
 
+async function getAsesoriasAsesor(id_asesor) {
+  const Asesorias = await db.asesorias.findMany({
+    where: {
+      id_estatus_asesoria: 3,
+      id_asesor: id_asesor
+    },
+    include: {
+      material_adicional: true,
+      materias: {
+        select: {
+          materia: true
+        }
+      },
+      estudiante: {
+        select: {
+          nombre: true,
+          apellido_paterno: true,
+          apellido_materno: true,
+          correo: true,
+          grupos: true
+        }
+      },
+      asesor: {
+        select: {
+          nombre: true,
+          apellido_paterno: true,
+          apellido_materno: true
+        }
+      },
+      horarios: {
+        select: {
+          horario: true
+        }
+      },
+      modalidades: { select: { modalidad: true } }
+    }
+  });
+
+  return Asesorias;
+}
+
 module.exports = { crearAsesoria, getAsesoriasEnCurso, completarAsesoria, eliminarAsesoria, obtenerPorId, editarAsesoria, guardarMaterialAdicional, 
-  obtenerMaterialPorId, eliminarMaterialBD
+  obtenerMaterialPorId, eliminarMaterialBD, getAsesoriasAsesor
  }

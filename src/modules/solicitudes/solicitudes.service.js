@@ -1,7 +1,6 @@
 const solicitudesRepository = require("./solicitudes.repository")
 const db = require("../../config/dbConfig")
 const asesoriasRepository = require('./../asesorias/asesorias.repository');
-const { map } = require("../../app");
 
 function formatearFecha(fecha){
     const [dia, mes, anio] = fecha.split('/');
@@ -33,6 +32,10 @@ async function obtenerSolicitudes(idAsesor){
 
 
 async function aceptarSolicitud(id, data) {
+
+    const datosEstudiante = await db.personas.findUnique({
+      where: { id_persona: data.id_estudiante }
+    })
 
     
     //buscamos la solicitud por id 
@@ -70,7 +73,7 @@ async function aceptarSolicitud(id, data) {
             id_modalidad: parseInt(data.id_modalidad),
             fecha_inicio: formatearFecha(data.fecha_inicio), 
             id_razon: parseInt(data.id_razon),
-            id_licenciatura: parseInt(data.id_licenciatura),
+            id_licenciatura: parseInt(datosEstudiante.id_licenciatura),
             sesiones_tomadas: data.sesiones_tomadas,
             observaciones: data.observaciones,
             id_estatus_asesoria: 3,

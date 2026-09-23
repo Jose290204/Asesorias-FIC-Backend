@@ -7,7 +7,11 @@ const traerCatalogos = async(req, res) => {
         //ejecuto la llamada de traer los catalogos
         const catalogos = await catalogosService.getCatalogos()
 
-        return res.status(200).json(catalogos);
+        return res.status(200).json({
+            success: true,
+            message: 'Catalogos obtenidos exitosamente',
+            data: catalogos
+        });
 
         
     } catch (error) {

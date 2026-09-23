@@ -11,6 +11,9 @@ router.post("/", verificarToken, asesoriasController.crearAsesoria);
 //obtener asesorias en curso
 router.get("/", verificarToken, asesoriasController.getAsesoriasEnCurso);
 
+//obtener asesorias del asesor
+router.get("/asesor", verificarToken, asesoriasController.getAsesoriasAsesor);
+
 //completar una asesoria
 router.patch("/:id/completar", verificarToken, asesoriasController.completarAsesoria);
 

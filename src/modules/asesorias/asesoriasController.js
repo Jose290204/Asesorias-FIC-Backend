@@ -240,5 +240,41 @@ async function eliminarMaterial(req, res) {
     }
 }
 
+async function getAsesoriasAsesor(req, res) {
+    try {
+        const { id_asesor } = req.query;
 
-module.exports = { crearAsesoria, getAsesoriasEnCurso, completarAsesoria, eliminarAsesoria, editarAsesoria, agregarMaterial, eliminarMaterial};
+        let idAsesorNum; 
+
+        // si id_asesor no es undefined
+        if (id_asesor !== undefined) {
+            idAsesorNum = Number(id_asesor);
+
+            // si id_asesor no es numero entero positivo
+            if (!Number.isInteger(idAsesorNum) || idAsesorNum <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "El ID del asesor debe ser un numero entero positivo"
+                });
+            }
+        }
+
+        const asesorias = await AsesoriasService.getAsesoriasAsesor(idAsesorNum);
+
+        return res.status(200).json({
+            success: true,
+            message: "Asesorias obtenidas exitosamente",
+            data: asesorias
+        });
+
+    } catch (error) {
+        console.error("Error en asesorias controller, getAsesoriasEnCurso", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error al obtener las asesorias activas"
+        });
+    }
+}
+
+
+module.exports = { crearAsesoria, getAsesoriasEnCurso, completarAsesoria, eliminarAsesoria, editarAsesoria, agregarMaterial, eliminarMaterial, getAsesoriasAsesor};

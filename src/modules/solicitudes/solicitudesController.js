@@ -1,3 +1,4 @@
+const { asesoriasCrear } = require('../asesorias/asesorias.validator');
 const solicitudesService = require('./solicitudes.service');
 const { solicitudesSchema } = require('./solicitudes.validator');
 
@@ -74,9 +75,21 @@ async function traerSolicitudes(req, res) {
 }
 
 async function aceptarSolicitud(req, res){
-    try {
-        const { id } = req.params //recibimos el id de la solicitud
+    const { id } = req.params //recibimos el id de la solicitud
 
+        const {error, value} = asesoriasCrear.validate(req.body, { abortEarly: false})
+
+        if(error){
+            return res.status(400).json({
+            success: false,
+            message: "Datos de entrada invalidos",
+            detalles: error.details[0].message
+        });
+        }
+
+    try { //si los datos vinieron bien se ejecuta las operaciones
+        
+        const datosAsesoria = value;
         const id_solicitud = Number(id);
 
         if(!id_solicitud){ //validamos si el id_asesoria viene bien
@@ -93,7 +106,7 @@ async function aceptarSolicitud(req, res){
         }
 
         //llamamos el service
-        await solicitudesService.aceptarSolicitud(id_solicitud);
+        await solicitudesService.aceptarSolicitud(id_solicitud, datosAsesoria);
 
         return res.status(200).json({
             success: true,
@@ -141,7 +154,7 @@ async function rechazarSolicitud(req, res){
 
         //llamamos el service
         await solicitudesService.rechazarSolicitud(id_solicitud, razon);
-        
+
         return res.status(200).json({
             success: true,
             message: "La solicitud fue rechazada exitosamente"

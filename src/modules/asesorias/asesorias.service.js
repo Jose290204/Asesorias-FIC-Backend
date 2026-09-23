@@ -162,4 +162,32 @@ async function subirMaterialAdicional(id_asesoria, files){
   return resultados;
 }
 
-module.exports = {crearAsesoria, getAsesoriasActivas, finalizarAsesoria, eliminarAsesoria, editarAsesoria, eliminarMaterialAdicional, subirMaterialAdicional}
+async function getAsesoriasAsesor(id_asesor) {
+  const asesorias = await asesoriasRepository.getAsesoriasAsesor(id_asesor);
+
+  return asesorias.map(item => {
+    const { estudiante, asesor, materias, horarios, modalidades, ...restoDeCampos } = item;
+
+    const estudianteNombre = estudiante 
+      ? `${estudiante.nombre} ${estudiante.apellido_paterno} ${estudiante.apellido_materno || ''}`.trim() 
+      : 'Sin asignar';
+
+    const asesorNombre = asesor 
+      ? `${asesor.nombre} ${asesor.apellido_paterno} ${asesor.apellido_materno || ''}`.trim() 
+      : 'Sin asignar';
+
+    return {
+      ...restoDeCampos,
+      estudiante: estudianteNombre,
+      asesor: asesorNombre,
+      materia: materias?.materia || '',
+      horario: horarios?.horario || 'Sin horario asignado',
+      modalidad: modalidades?.modalidad || '',
+      correo: estudiante?.correo || '',
+      id_grupo: estudiante?.grupos?.id_grupo || null,
+      grupo: estudiante?.grupos?.grupo || 'Sin grupo asignado'
+    };
+  });
+}
+
+module.exports = {crearAsesoria, getAsesoriasActivas, finalizarAsesoria, eliminarAsesoria, editarAsesoria, eliminarMaterialAdicional, subirMaterialAdicional, getAsesoriasAsesor}
